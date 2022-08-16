@@ -2,5 +2,7 @@ bentoml==1.0.0
 fastapi==0.78.0
 fastjsonschema==2.15.1
 xgboost==1.6.1
+pandas
+numpy
 sklearn
 jupyter

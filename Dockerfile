@@ -1,7 +1,7 @@
 # Base Image
 FROM python:3.8.13
 # copy base application
-COPY ./BentoAPI /app
+#COPY ./BentoAPI /app
 COPY requirements-bento.txt /tmp/requirements.txt
 # install package
 RUN pip install pip==21

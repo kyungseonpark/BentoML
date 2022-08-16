@@ -1,3 +1,3 @@
 import os
 
-BENTOML_HOME = os.genenv("BENTOML_HOME", "/bentoml")
+BENTOML_HOME = os.getenv("BENTOML_HOME", "/bentoml")

@@ -7,6 +7,7 @@ services:
     ports:
       - "${BENTOML_PORT}:22124"
     volumes:
+      - ./BentoAPI:/app
       - ${LOCAL_BENTO_HOME}:/bentoml
     restart: on-failure
     tty: true
