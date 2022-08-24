@@ -5,4 +5,4 @@ xgboost==1.6.1
 pandas
 numpy
 sklearn
-jupyter
+cloudpickle==0.1.0

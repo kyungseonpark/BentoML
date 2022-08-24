@@ -1,26 +1,34 @@
 import bentoml
-import xgboost as xgb
+import typing as t
 from datetime import datetime
 
 
 def make_label():
     now = datetime.now()
-    time_tag = now.strftime("%Y%m%d%H%M")
+    time_tag = now.strftime("%y%m%d%H%M")
     return time_tag
 
 
+def model_to_bento(
+        service_name: str,
+        build_ctx: t.Optional[str] = None,
+):
+    service_py_path = f'{service_name}'
+    with open('/app/BentoML_service.py', 'r', encoding='utf-8') as f:
+        bento_service = f.read()
+        prev_glo_val = ["MODEL_NAME = ''"]
+        new_glo_val = [f"MODEL_NAME = '{service_name}'"]
 
-def XGBoost(x_data, y_data,
-            model_name: str,
-            num_class: int = 2,
-            train_type: str = 'clf',
-            param: dict = {"max_depth": 3, "eta": 0.3, "objective": "multi:softprob"}):
-    # TBA: reg, else 해야함.
-    clf = xgb.DMatrix(x_data, label=y_data) if train_type == 'reg' else xgb.DMatrix(x_data, label=y_data)
-    param['num_class'] = num_class
-    fitted_clf = xgb.train(param, clf)
-    saved_model = bentoml.xgboost.save_model(
-        f'{model_name}',
-        fitted_clf
-    )
-    return f'{saved_model.tag}'
+        for pgv, ngv in zip(prev_glo_val, new_glo_val):
+            bento_service = bento_service.replace(pgv, ngv)
+
+        with open(service_py_path, 'w', encoding='UTF8') as nf:
+            nf.write(bento_service)
+
+    built_model = bentoml.bentos.build(service=f'{service_name}:svc', build_ctx=build_ctx)
+
+    docker_img_tag = f'{built_model.tag}'
+    success_containerize = bentoml.bentos.containerize(tag=built_model.tag, docker_image_tag=docker_img_tag)
+    if not success_containerize:
+        print("Containerize Failed.")
+    return docker_img_tag

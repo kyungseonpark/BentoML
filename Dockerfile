@@ -9,4 +9,4 @@ RUN pip install -r /tmp/requirements.txt
 # set BentoML home
 ENV BENTOML_HOME /bentoml
 # start FastAPI
-CMD uvicorn BentoAPI:bentoml --host 0.0.0.0 --port 22124 --app-dir /app
+CMD uvicorn BentoAPI:api --host 0.0.0.0 --port 22124 --app-dir /app
