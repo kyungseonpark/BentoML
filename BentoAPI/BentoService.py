@@ -2,8 +2,9 @@ import bentoml
 from bentoml.io import JSON
 
 
-def bento_service(model_name: str):
-    bento_runner = bentoml.picklable_model.get(f'{model_name}:latest').to_runner()
+def bento_service(framework: str, model_name_tag: str):
+    model_name = model_name_tag.split(':')[0]
+    bento_runner = getattr(bentoml, framework).get(f'{model_name_tag}').to_runner()
     service = bentoml.Service(f'{model_name}', runners=[bento_runner])
 
     @service.api(input=JSON(), output=JSON())
